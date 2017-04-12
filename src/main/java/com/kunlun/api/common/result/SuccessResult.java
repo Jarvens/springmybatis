@@ -1,4 +1,4 @@
-package com.kunlun.api.common;
+package com.kunlun.api.common.result;
 
 
 import java.io.Serializable;

@@ -1,4 +1,4 @@
-package com.kunlun.api.common;
+package com.kunlun.api.common.result;
 
 /**
  * Created by kunlun on 2017/4/12.
