@@ -12,7 +12,7 @@ public class Invoice {
     private String code;
 
     //发票金额
-    private int cost;
+    private Long cost;
 
     //还血报销ID
     private Long reimbursementId;
@@ -36,11 +36,11 @@ public class Invoice {
         this.code = code;
     }
 
-    public int getCost() {
+    public Long getCost() {
         return cost;
     }
 
-    public void setCost(int cost) {
+    public void setCost(Long cost) {
         this.cost = cost;
     }
 

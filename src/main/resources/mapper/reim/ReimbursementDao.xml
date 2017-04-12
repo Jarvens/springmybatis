@@ -67,4 +67,19 @@
         from t_reimbursement where 1=1
         <if test="status!=3">and status =#{status}</if>
     </select>
+
+
+    <insert id="addPart" parameterType="com.kunlun.api.domain.Reimbursement">
+        <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into t_reimbursement
+        (name,card_no,phone,relation,demand_name,demand_card_no,
+        cost,admission_time,discharged_time,demand_mechanism,
+        is_local,account_holder_name,bank_name,bank_no,create_time,update_time)
+        values(#{name},#{cardNo},#{phone},#{relation},#{demandName},
+        #{demandCardNo},#{cost}*1000,#{admissionTime},#{dischargedTime},
+        #{demandMechanism},#{isLocal},#{accountHolderName},#{bankName},
+        #{bankNo},now(),now())
+    </insert>
 </mapper>
