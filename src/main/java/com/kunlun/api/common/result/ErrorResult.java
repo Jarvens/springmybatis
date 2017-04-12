@@ -16,6 +16,14 @@ public class ErrorResult extends BaseResult implements Serializable {
         super(FAIL);
     }
 
+    public Error getError() {
+        return error;
+    }
+
+    public void setError(Error error) {
+        this.error = error;
+    }
+
     public ErrorResult(String code, String message) {
         this();
         this.error = new Error();
