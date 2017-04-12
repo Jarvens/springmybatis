@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kunlun.api.dao.reim.ReimbursementDao">
+    <resultMap id="BaseResultMap" type="com.kunlun.api.domain.Reimbursement">
+        <result column="id" property="id" jdbcType="BIGINT"></result>
+        <result column="name" property="name" jdbcType="VARCHAR"></result>
+        <result column="phone" property="phone" jdbcType="VARCHAR"></result>
+        <result column="crdNo" property="cardNo" jdbcType="VARCHAR"></result>
+        <result column="relation" property="relation" jdbcType="VARCHAR"></result>
+        <result column="demandName" property="demandName" jdbcType="VARCHAR"></result>
+        <result column="demandCardNo" property="demandCardNo" jdbcType="VARCHAR"></result>
+        <result column="cost" property="cost" jdbcType="BIGINT"></result>
+        <result column="admissionTime" property="admissionTime" jdbcType="TIMESTAMP"></result>
+        <result column="dischargedTime" property="dischargedTime" jdbcType="TIMESTAMP"></result>
+        <result column="demandMechanism" property="demandMechanism" jdbcType="VARCHAR"></result>
+        <result column="isLocal" property="isLocal" jdbcType="VARCHAR"></result>
+        <result column="accountHolderName" property="accountHolderName" jdbcType="VARCHAR"></result>
+        <result column="bankName" property="bankName" jdbcType="VARCHAR"></result>
+        <result column="bankNo" property="bankNo" jdbcType="VARCHAR"></result>
+        <result column="actualCost" property="actualCost" jdbcType="BIGINT"></result>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"></result>
+        <result column="status" property="status" jdbcType="VARCHAR"></result>
+        <result column="cardImgUrl" property="cardImgUrl" jdbcType="VARCHAR"></result>
+        <result column="relationImgUrl" property="relationImgUrl" jdbcType="VARCHAR"></result>
+        <result column="dischargedImgUrl" property="dischargedImgUrl" jdbcType="VARCHAR"></result>
+        <result column="cityCode" property="cityCode" jdbcType="VARCHAR"></result>
+        <result column="leaderConfirm" property="leaderConfirm" jdbcType="VARCHAR"></result>
+        <result column="operatorConfirm" property="operatorConfirm" jdbcType="VARCHAR"></result>
+        <result column="operator" property="operator" jdbcType="VARCHAR"></result>
+        <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP"></result>
+    </resultMap>
+
+    <select id="count" resultType="INTEGER" parameterType="java.lang.String">
+        select count(1) from t_reimbursement where 1=1
+        and status=#{status}
+    </select>
+
+    <select id="list" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select id as id,
+        name as name,
+        phone as phone,
+        card_no as cardNo,
+        relation as relation,
+        demand_name as demandName,
+        demand_card_no as demandCardNo,
+        (cost/1000) as cost,
+        admission_time as admissionTime,
+        discharged_time as dischargedTime,
+        demand_mechanism as demandMechanism,
+        is_local as isLocal,
+        account_holder_name as accountHolderName,
+        bank_name as bankName,
+        bank_no as bankNo,
+        (actual_cost/1000) as actualCost,
+        create_time as createTime,
+        status as status,
+        card_img_url as cardImgUrl,
+        relation_img_url as relationImgUrl,
+        discharged_img_url as dischargedImgUrl,
+        city_code as cityCode,
+        leader_confirm as leaderConfirm,
+        operator_confirm as operatorConfirm,
+        operator,
+        update_time as updateTime
+        from t_reimbursement where 1=1
+        <if test="status!=3">and status =#{status}</if>
+    </select>
+</mapper>

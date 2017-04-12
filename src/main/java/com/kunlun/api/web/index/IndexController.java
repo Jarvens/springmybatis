@@ -1,9 +1,9 @@
-package com.kunlun.api.web;
+package com.kunlun.api.web.index;
 
 import com.kunlun.api.common.result.BaseResult;
 import com.kunlun.api.common.result.PageResult;
 import com.kunlun.api.domain.User;
-import com.kunlun.api.service.IndexService;
+import com.kunlun.api.service.index.IndexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,10 +44,11 @@ public class IndexController {
      */
     @RequestMapping(value = "/success", method = RequestMethod.GET)
     public BaseResult success() {
+        Integer count = indexService.count();
         User user = new User();
         user.setAddress("浙江省杭州市");
         user.setName("张三");
-        user.setAge(10);
+        user.setAge(count);
         return BaseResult.success(user);
     }
 
@@ -69,6 +70,6 @@ public class IndexController {
             user.setAddress("杭州" + item);
             userList.add(user);
         });
-        return new PageResult(userList, Long.valueOf(userList.size()), pageNo, pageSize);
+        return new PageResult(userList, userList.size(), pageNo, pageSize);
     }
 }

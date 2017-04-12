@@ -10,7 +10,7 @@ public class PageResult extends SuccessResult implements Serializable {
     private static final long serialVersionUID = 794304989296864241L;
 
     //记录总数
-    private Long total;
+    private Integer total;
 
     //当前页码
     private int pageNo;
@@ -24,7 +24,7 @@ public class PageResult extends SuccessResult implements Serializable {
     //是否存在下一页
     private Boolean hasNextPage;
 
-    public PageResult(Object object, Long total, int pageNo, int pageSize) {
+    public PageResult(Object object, Integer total, int pageNo, int pageSize) {
         super(object);
         this.total = total;
         this.pageNo = pageNo;
@@ -32,16 +32,16 @@ public class PageResult extends SuccessResult implements Serializable {
         this.hasNextPage = total > (pageNo * pageSize);
     }
 
-    public PageResult(Object object, Long total) {
+    public PageResult(Object object, Integer total) {
         super(object);
         this.pageNo = 1;
     }
 
-    public Long getTotal() {
+    public Integer getTotal() {
         return total;
     }
 
-    public void setTotal(Long total) {
+    public void setTotal(Integer total) {
         this.total = total;
     }
 

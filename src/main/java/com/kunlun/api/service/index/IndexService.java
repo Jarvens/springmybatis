@@ -1,4 +1,4 @@
-package com.kunlun.api.service;
+package com.kunlun.api.service.index;
 
 
 /**

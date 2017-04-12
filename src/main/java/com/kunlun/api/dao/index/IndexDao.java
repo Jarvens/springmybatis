@@ -1,4 +1,4 @@
-package com.kunlun.api.dao;
+package com.kunlun.api.dao.index;
 
 import org.springframework.stereotype.Repository;
 

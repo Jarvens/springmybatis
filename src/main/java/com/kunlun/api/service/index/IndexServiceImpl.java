@@ -1,7 +1,6 @@
-package com.kunlun.api.service.impl;
+package com.kunlun.api.service.index;
 
-import com.kunlun.api.dao.IndexDao;
-import com.kunlun.api.service.IndexService;
+import com.kunlun.api.dao.index.IndexDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
