@@ -4,4 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kunlun.api.dao.invo.InvoiceDao">
 
+    <insert id="add" parameterType="com.kunlun.api.domain.Invoice">
+        insert into t_invoice(code,cost,reimbursement_id,img_url) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.code},#{item.cost}*1000,#{item.reimbursementId},#{item.imgUrl})
+        </foreach>
+    </insert>
 </mapper>
