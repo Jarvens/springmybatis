@@ -35,9 +35,9 @@
             <!--</list>-->
         <!--</property>-->
     </bean>
-    <bean id="logFilter" class="com.alibaba.druid.filter.logging.Log4jFilter">
-        <property name="statementExecutableSqlLogEnable" value="false"/>
-    </bean>
+    <!--<bean id="logFilter" class="com.alibaba.druid.filter.logging.Log4jFilter">-->
+        <!--<property name="statementExecutableSqlLogEnable" value="false"/>-->
+    <!--</bean>-->
     <!--3.配置SqlSessionFactory对象-->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <!--注入数据库连接池-->
