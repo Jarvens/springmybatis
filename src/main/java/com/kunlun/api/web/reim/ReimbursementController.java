@@ -1,6 +1,7 @@
 package com.kunlun.api.web.reim;
 
 import com.kunlun.api.common.result.BaseResult;
+import com.kunlun.api.common.utils.RedisUtils;
 import com.kunlun.api.domain.Invoice;
 import com.kunlun.api.domain.Reimbursement;
 import com.kunlun.api.service.reim.ReimbursementService;
@@ -56,8 +57,8 @@ public class ReimbursementController {
         reimbursement.setOperatorConfirm("0");
         reimbursement.setOperator("值班人员");
         List<Invoice> invoiceList = new ArrayList<>();
-        List<String> mock = Arrays.asList("0","1","2");
-        mock.forEach(item->{
+        List<String> mock = Arrays.asList("0", "1", "2");
+        mock.forEach(item -> {
             Invoice invoice = new Invoice();
             invoice.setCode(item);
             invoice.setCost(100l);
@@ -65,7 +66,6 @@ public class ReimbursementController {
             invoiceList.add(invoice);
         });
         reimbursement.setInvoiceList(invoiceList);
-
         return reimbursementService.add(reimbursement);
     }
 }
