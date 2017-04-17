@@ -37,4 +37,9 @@ public class Constants {
      */
     public static final String ENCRYPT_SALT = "ed1936ff13f5c5776dc39a2503044af99b02b369";
 
+    /**
+     * 默认密码
+     */
+    public static final String DEFAULT_PASSWORD = "888888";
+
 }

@@ -49,12 +49,17 @@ public class SystemUserController {
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public BaseResult add(@Validated SysUser sysUser, BindingResult validResult) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public BaseResult add(@Validated SysUser sysUser, BindingResult validResult, boolean defaultPass) throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (validResult.hasErrors()) {
             String errors = validResult.getAllErrors().get(0).getDefaultMessage();
             return BaseResult.error("param_error", errors);
         }
-        String encryptPassword = PBKUtils.getEncryptedPassword(sysUser.getPassword(), Constants.ENCRYPT_SALT);
+        String encryptPassword = "";
+        if (defaultPass) {
+            encryptPassword = PBKUtils.getEncryptedPassword(Constants.DEFAULT_PASSWORD, Constants.ENCRYPT_SALT);
+        } else {
+            encryptPassword = PBKUtils.getEncryptedPassword(sysUser.getPassword().trim(), Constants.ENCRYPT_SALT);
+        }
         sysUser.setPassword(encryptPassword);
         return systemUserService.add(sysUser);
     }
@@ -78,7 +83,7 @@ public class SystemUserController {
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public BaseResult delete(String account) {
-        return systemUserService.deleteUser(account);
+        return systemUserService.deleteUser(account.trim());
     }
 
 
@@ -94,7 +99,7 @@ public class SystemUserController {
         if (StringUtils.isNullOrEmpty(account) || StringUtils.isNullOrEmpty(password)) {
             return BaseResult.error("param_error", "请输入用户名或者密码");
         }
-        return systemUserService.login(account, password);
+        return systemUserService.login(account.trim(), password.trim());
     }
 
     /**
@@ -113,7 +118,19 @@ public class SystemUserController {
         if (StringUtils.isNullOrEmpty(confirmPassword)) {
             return BaseResult.error("param_error", "请输入确认密码");
         }
-        return systemUserService.updatePassword(account, oldPassword, newPassword, confirmPassword);
+        return systemUserService.updatePassword(account.trim(), oldPassword.trim(), newPassword.trim(),
+                confirmPassword.trim());
+    }
+
+    /**
+     * 重置密码
+     *
+     * @param account
+     * @return
+     */
+    @RequestMapping(value = "/reset-password", method = RequestMethod.POST)
+    public BaseResult resetPassword(String account) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        return systemUserService.resetPassword(account.trim());
     }
 
 

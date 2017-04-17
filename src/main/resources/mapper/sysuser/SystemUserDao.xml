@@ -39,6 +39,72 @@
 
     <select id="count" resultMap="java.lang.Integer" parameterType="java.lang.String">
         select count (1) from t_sys_user where 1=1
-        <if test="key!=null"> and concat_ws(account,name,card_no) like #{key}</if>
+        <if test="key!=null">and concat_ws(account,name,card_no) like #{key}</if>
     </select>
+
+    <insert id="add" parameterType="com.kunlun.api.domain.SysUser">
+        insert into t_sys_user(account,name,mobile_phone,password,card_no,sex,age,type,status,operator,create_time,update_time)
+        values(#{account},#{name},#{mobilePhone},#{password},#{cardNo},#{sex},#{age},#{type},'0','管理员',now(),now())
+    </insert>
+
+    <select id="validUser" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        id,
+        account,
+        name,
+        mobile_phone as mobilePhone,
+        password,
+        card_no as cardNo,
+        sex,
+        age,
+        type,
+        status,
+        operator,
+        create_time as createTime,
+        update_time as updateTime
+        from t_sys_user where account=#{account} and password=#{password}
+    </select>
+
+    <update id="updatePassword" parameterType="java.lang.String">
+        update t_sys_user set password=#{password} where account=#{account}
+    </update>
+
+    <select id="validAccount" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        id,
+        account,
+        name,
+        mobile_phone as mobilePhone,
+        password,
+        card_no as cardNo,
+        sex,
+        age,
+        type,
+        status,
+        operator,
+        create_time as createTime,
+        update_time as updateTime
+        from t_sys_user
+        where account=#{account}
+    </select>
+
+    <select id="validName" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select count(1) from t_sys_user where name=#{name}
+    </select>
+
+    <update id="deleteUser" parameterType="java.lang.String">
+        update t_sys_user set status='1' where account=#{account}
+    </update>
+
+    <update id="updateSysUserInfo" parameterType="com.kunlun.api.domain.SysUser">
+        update t_sys_user
+        set name=#{name},
+        mobile_phone=#{mobilePhone},
+        card_no=#{cardNo},
+        sex=#{sex},
+        age=#{age},
+        type=#{type},
+        update_time=now()
+        where id=#{id}
+    </update>
 </mapper>

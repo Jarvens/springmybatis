@@ -27,4 +27,6 @@ public interface SystemUserService {
 
     BaseResult updateUserInfo(SysUser sysUser);
 
+    BaseResult resetPassword(String account) throws InvalidKeySpecException, NoSuchAlgorithmException;
+
 }

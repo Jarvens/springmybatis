@@ -60,8 +60,8 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
 
     @Override
     public BaseResult add(SysUser sysUser) {
-        Integer validAccount = systemUserDao.validAccount(sysUser.getAccount());
-        if (validAccount > 0) {
+        SysUser validAccount = systemUserDao.validAccount(sysUser.getAccount());
+        if (null != validAccount) {
             return BaseResult.error("account_exist", "账号已存在");
         }
         Integer validName = systemUserDao.validName(sysUser.getName());
@@ -82,8 +82,8 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
     @Override
     public BaseResult login(String account, String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
         String encryptPassword = PBKUtils.getEncryptedPassword(password, Constants.ENCRYPT_SALT);
-        Integer count = systemUserDao.validUser(account, encryptPassword);
-        if (count <= 0) {
+        SysUser sysUser = systemUserDao.validUser(account, encryptPassword);
+        if (null == sysUser) {
             return BaseResult.error("login_fail", "账号或密码不正确");
         }
         //TODO  生成Token 并且返回
@@ -102,19 +102,14 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
     @Override
     public BaseResult updatePassword(String account, String oldPassword, String newPassword, String confirmPassword) throws InvalidKeySpecException, NoSuchAlgorithmException {
         String encryptPassword = PBKUtils.getEncryptedPassword(oldPassword, Constants.ENCRYPT_SALT);
-        Integer count = systemUserDao.validUser(account, encryptPassword);
-        if (count <= 0) {
+        SysUser sysUser = systemUserDao.validUser(account, encryptPassword);
+        if (null == sysUser) {
             return BaseResult.error("update_fail", "账号或密码不正确");
         }
-
-        Integer code = systemUserDao.updatePassword(account,
+        systemUserDao.updatePassword(account,
                 PBKUtils.getEncryptedPassword(newPassword, Constants.ENCRYPT_SALT));
-        if (code > 0) {
-            //TODO  重新生成Token  并且页面跳转到登录页
-            return BaseResult.success("密码修改成功");
-        }
-
-        return BaseResult.error("update_fail", "密码修改失败");
+        //TODO  重新生成Token  并且页面跳转到登录页
+        return BaseResult.success("密码修改成功");
     }
 
     /**
@@ -126,7 +121,7 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
     @Override
     public BaseResult deleteUser(String account) {
 
-        Integer result = systemUserDao.delete(account);
+        Integer result = systemUserDao.deleteUser(account);
         if (result > 0) {
             return BaseResult.success("删除成功");
         }
@@ -147,5 +142,23 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
         }
         systemUserDao.updateSysUserInfo(sysUser);
         return BaseResult.success("用户信息更新成功");
+    }
+
+    /**
+     * 密码重置
+     *
+     * @param account
+     * @return
+     */
+    @Override
+    public BaseResult resetPassword(String account) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        SysUser sysUser = systemUserDao.validAccount(account);
+        if (null == sysUser) {
+            return BaseResult.error("account_not_exist", "账户不存在");
+        }
+        String encryptPassword = PBKUtils.getEncryptedPassword(Constants.DEFAULT_PASSWORD, Constants.ENCRYPT_SALT);
+        sysUser.setPassword(encryptPassword);
+        systemUserDao.updateSysUserInfo(sysUser);
+        return BaseResult.success("密码重置成功");
     }
 }

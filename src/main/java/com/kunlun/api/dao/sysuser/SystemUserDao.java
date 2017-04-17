@@ -20,15 +20,15 @@ public interface SystemUserDao {
 
     void add(SysUser sysUser);
 
-    Integer validUser(String account, String password);
+    SysUser validUser(@Param(value = "account") String account, @Param(value = "password") String password);
 
-    Integer updatePassword(String account, String newPassword);
+    void updatePassword(@Param(value = "account") String account, @Param(value = "newPassword") String newPassword);
 
-    Integer validAccount(String account);
+    SysUser validAccount(@Param(value = "account") String account);
 
-    Integer validName(String name);
+    Integer validName(@Param(value = "name") String name);
 
-    Integer delete(String account);
+    Integer deleteUser(@Param(value = "account") String account);
 
     void updateSysUserInfo(SysUser sysUser);
 
