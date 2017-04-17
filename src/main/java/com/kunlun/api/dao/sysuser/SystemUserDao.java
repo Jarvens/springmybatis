@@ -16,4 +16,8 @@ public interface SystemUserDao {
     List<SysUser> list(RowBounds rowBounds, @Param(value = "key") String key);
 
     Integer count(@Param(value = "key") String key);
+
+    void add(SysUser sysUser);
+
+    Integer validUser(String account,String password);
 }

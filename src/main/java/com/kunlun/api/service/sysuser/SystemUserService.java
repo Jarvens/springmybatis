@@ -4,6 +4,9 @@ import com.kunlun.api.common.result.BaseResult;
 import com.kunlun.api.common.result.PageResult;
 import com.kunlun.api.domain.SysUser;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
 
 /**
  * Created by kunlun on 2017/4/17.
@@ -14,7 +17,9 @@ public interface SystemUserService {
 
     Integer count(String key);
 
-    BaseResult add(SysUser sysUser);
+    BaseResult add(SysUser sysUser) throws InvalidKeySpecException, NoSuchAlgorithmException;
+
+    BaseResult login(String account,String password) throws InvalidKeySpecException, NoSuchAlgorithmException;
 
 
 }

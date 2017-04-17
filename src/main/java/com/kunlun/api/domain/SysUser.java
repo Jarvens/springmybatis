@@ -1,5 +1,10 @@
 package com.kunlun.api.domain;
 
+import com.kunlun.api.common.constants.Constants;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 /**
@@ -12,15 +17,18 @@ public class SysUser {
     private Long id;
 
     //账户
+    @NotBlank(message = "请输入账户信息")
     private String account;
 
     //姓名
     private String name;
 
     //手机号
+    @Pattern(regexp = Constants.MOBILE_REGEXP, message = "手机格式错误")
     private String mobilePhone;
 
     //密码
+    @Length(min = 6, max = 10, message = "密码长度在6~10位之间")
     private String password;
 
     //身份证号
