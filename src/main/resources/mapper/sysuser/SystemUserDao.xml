@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kunlun.api.dao.sysuser.SystemUserDao">
+    <resultMap id="BaseResultMap" type="com.kunlun.api.domain.SysUser">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="mobilePhone" property="mobilePhone" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="cardNo" property="cardNo" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="age" property="age" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="operator" property="operator" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="list" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select id,
+        account,
+        name,
+        mobile_phone as mobilePhone,
+        password,
+        card_no as cardNo,
+        sex,
+        age,
+        type,
+        status,
+        operator,
+        create_time as createTime,
+        update_time as updateTime
+        from t_sys_user where 1=1
+        <if test="key!=null">and concat_ws(account,name,card_no) like #{key}</if>
+    </select>
+
+    <select id="count" resultMap="java.lang.Integer" parameterType="java.lang.String">
+        select count (1) from t_sys_user where 1=1
+        <if test="key!=null"> and concat_ws(account,name,card_no) like #{key}</if>
+    </select>
+</mapper>

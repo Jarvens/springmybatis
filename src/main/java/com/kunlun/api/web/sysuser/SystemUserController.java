@@ -2,6 +2,8 @@ package com.kunlun.api.web.sysuser;
 
 import com.kunlun.api.common.result.BaseResult;
 import com.kunlun.api.domain.SysUser;
+import com.kunlun.api.service.sysuser.SystemUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,19 +16,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("sys/user")
 public class SystemUserController {
 
+    @Autowired
+    private SystemUserService systemUserService;
+
     /**
      * 查询 云平台系统用户列表
      * 分页  条件查询
      *
      * @param pageNo
      * @param pageSize
-     * @param sysUser
+     * @param key
      * @return
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public BaseResult list(Integer pageNo, Integer pageSize, SysUser sysUser) {
+    public BaseResult list(Integer pageNo, Integer pageSize, String key) {
 
-        return null;
+        return systemUserService.list(pageNo, pageSize, key);
     }
 
     /**
@@ -37,6 +42,7 @@ public class SystemUserController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public BaseResult add(SysUser sysUser) {
+
         return null;
     }
 
@@ -53,6 +59,7 @@ public class SystemUserController {
 
     /**
      * 删除用户信息
+     *
      * @param sysUser
      * @return
      */
