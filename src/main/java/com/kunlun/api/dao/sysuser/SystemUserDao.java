@@ -1,5 +1,6 @@
 package com.kunlun.api.dao.sysuser;
 
+import com.kunlun.api.common.result.BaseResult;
 import com.kunlun.api.domain.SysUser;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
@@ -20,4 +21,11 @@ public interface SystemUserDao {
     void add(SysUser sysUser);
 
     Integer validUser(String account,String password);
+
+    Integer updatePassword(String account,String newPassword);
+
+    Integer validAccount(String account);
+
+    Integer validName(String name);
+
 }

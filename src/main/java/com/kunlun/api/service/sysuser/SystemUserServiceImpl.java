@@ -8,6 +8,7 @@ import com.kunlun.api.common.utils.PBKUtils;
 import com.kunlun.api.dao.sysuser.SystemUserDao;
 import com.kunlun.api.domain.SysUser;
 import com.mysql.jdbc.StringUtils;
+import com.sun.xml.internal.rngom.parse.host.Base;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +61,14 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
 
     @Override
     public BaseResult add(SysUser sysUser) {
-
+        Integer validAccount = systemUserDao.validAccount(sysUser.getAccount());
+        if (validAccount > 0) {
+            return BaseResult.error("account_exist", "账号已存在");
+        }
+        Integer validName = systemUserDao.validName(sysUser.getName());
+        if (validName > 0) {
+            return BaseResult.error("name_exist", "名称已存在");
+        }
         systemUserDao.add(sysUser);
         return BaseResult.success("新增成功");
     }
@@ -77,8 +85,46 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
         String encryptPassword = PBKUtils.getEncryptedPassword(password, Constants.ENCRYPT_SALT);
         Integer count = systemUserDao.validUser(account, encryptPassword);
         if (count <= 0) {
-            return BaseResult.error("login_fail","用户名或密码不正确");
+            return BaseResult.error("login_fail", "账号或密码不正确");
         }
+        return null;
+    }
+
+    /**
+     * 密码修改
+     *
+     * @param account
+     * @param oldPassword
+     * @param newPassword
+     * @param confirmPassword
+     * @return
+     */
+    @Override
+    public BaseResult updatePassword(String account, String oldPassword, String newPassword, String confirmPassword) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        String encryptPassword = PBKUtils.getEncryptedPassword(oldPassword, Constants.ENCRYPT_SALT);
+        Integer count = systemUserDao.validUser(account, encryptPassword);
+        if (count <= 0) {
+            return BaseResult.error("update_fail", "账号或密码不正确");
+        }
+
+        Integer code = systemUserDao.updatePassword(account,
+                PBKUtils.getEncryptedPassword(newPassword, Constants.ENCRYPT_SALT));
+        if (code > 0) {
+            //TODO  重新生成Token  并且页面跳转到登录页
+            return BaseResult.success("密码修改成功");
+        }
+
+        return BaseResult.error("update_fail", "密码修改失败");
+    }
+
+    /**
+     * 删除用户信息
+     *
+     * @param account
+     * @return
+     */
+    @Override
+    public BaseResult deleteUser(String account) {
         return null;
     }
 }

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.List;
 
 /**
  * 云平台  -  用户
@@ -78,7 +77,7 @@ public class SystemUserController {
      * @return
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public BaseResult delete(SysUser sysUser) {
+    public BaseResult delete(String account) {
         return null;
     }
 
@@ -91,11 +90,33 @@ public class SystemUserController {
      * @return
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public BaseResult login(String account, String password) {
-        if(StringUtils.isNullOrEmpty(account)|| StringUtils.isNullOrEmpty(password)){
-            return BaseResult.error("param_error","请输入用户名或者密码");
+    public BaseResult login(String account, String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        if (StringUtils.isNullOrEmpty(account) || StringUtils.isNullOrEmpty(password)) {
+            return BaseResult.error("param_error", "请输入用户名或者密码");
         }
+        systemUserService.login(account,password);
+
+        //TODO   生成Token
         return null;
+    }
+
+    /**
+     * 密码修改
+     *
+     * @param account
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    @RequestMapping(value = "/update-password", method = RequestMethod.POST)
+    public BaseResult updatePassword(String account, String oldPassword, String newPassword, String confirmPassword) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        if (StringUtils.isNullOrEmpty(newPassword)) {
+            return BaseResult.error("param_error", "请输入新密码");
+        }
+        if (StringUtils.isNullOrEmpty(confirmPassword)) {
+            return BaseResult.error("param_error", "请输入确认密码");
+        }
+        return systemUserService.updatePassword(account,oldPassword,newPassword,confirmPassword);
     }
 
 
