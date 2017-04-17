@@ -1,5 +1,7 @@
 package com.kunlun.api.web.sysuser;
 
+import com.kunlun.api.common.annotations.AccessAnnotation;
+import com.kunlun.api.common.annotations.UserTypeAnnotation;
 import com.kunlun.api.common.constants.Constants;
 import com.kunlun.api.common.result.BaseResult;
 import com.kunlun.api.common.utils.PBKUtils;
@@ -48,6 +50,8 @@ public class SystemUserController {
      * @param sysUser
      * @return
      */
+    @UserTypeAnnotation
+    @AccessAnnotation
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public BaseResult add(@Validated SysUser sysUser, BindingResult validResult, boolean defaultPass) throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (validResult.hasErrors()) {
@@ -111,7 +115,7 @@ public class SystemUserController {
      * @return
      */
     @RequestMapping(value = "/update-password", method = RequestMethod.POST)
-    public BaseResult updatePassword(String account, String oldPassword, String newPassword, String confirmPassword) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public BaseResult updatePassword(String account, String oldPassword, String newPassword, String confirmPassword) throws Exception {
         if (StringUtils.isNullOrEmpty(newPassword)) {
             return BaseResult.error("param_error", "请输入新密码");
         }

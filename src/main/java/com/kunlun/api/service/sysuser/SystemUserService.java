@@ -21,7 +21,7 @@ public interface SystemUserService {
 
     BaseResult login(String account,String password) throws InvalidKeySpecException, NoSuchAlgorithmException;
 
-    BaseResult updatePassword(String account,String oldPassword,String newPassword,String confirmPassword) throws InvalidKeySpecException, NoSuchAlgorithmException;
+    BaseResult updatePassword(String account,String oldPassword,String newPassword,String confirmPassword) throws Exception;
 
     BaseResult deleteUser(String account);
 

@@ -18,6 +18,16 @@ public class Constants {
     public static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
 
     /**
+     * Token加密算法
+     */
+    public static final String TOKEN_ALGORITHM = "AES/ECB/PKCS5Padding";
+
+    /**
+     * Token逆向秘钥
+     */
+    public static final String TOKEN_KEY = "LEKWRVOUHAYCSQCR";
+
+    /**
      * 盐的长度
      */
     public static final int SALT_BYTE_SIZE = 40 / 2;

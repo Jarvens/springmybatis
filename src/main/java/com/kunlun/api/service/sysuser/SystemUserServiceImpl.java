@@ -5,6 +5,7 @@ import com.kunlun.api.common.result.BaseResult;
 import com.kunlun.api.common.result.PageCommon;
 import com.kunlun.api.common.result.PageResult;
 import com.kunlun.api.common.utils.PBKUtils;
+import com.kunlun.api.common.utils.TokenUtils;
 import com.kunlun.api.dao.sysuser.SystemUserDao;
 import com.kunlun.api.domain.SysUser;
 import com.mysql.jdbc.StringUtils;
@@ -100,7 +101,7 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
      * @return
      */
     @Override
-    public BaseResult updatePassword(String account, String oldPassword, String newPassword, String confirmPassword) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public BaseResult updatePassword(String account, String oldPassword, String newPassword, String confirmPassword) throws Exception {
         String encryptPassword = PBKUtils.getEncryptedPassword(oldPassword, Constants.ENCRYPT_SALT);
         SysUser sysUser = systemUserDao.validUser(account, encryptPassword);
         if (null == sysUser) {
@@ -108,8 +109,9 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
         }
         systemUserDao.updatePassword(account,
                 PBKUtils.getEncryptedPassword(newPassword, Constants.ENCRYPT_SALT));
-        //TODO  重新生成Token  并且页面跳转到登录页
-        return BaseResult.success("密码修改成功");
+        //生成Token
+        String token = TokenUtils.aesEncrypt(sysUser.toString(), Constants.TOKEN_KEY);
+        return BaseResult.success(token);
     }
 
     /**
@@ -120,7 +122,6 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
      */
     @Override
     public BaseResult deleteUser(String account) {
-
         Integer result = systemUserDao.deleteUser(account);
         if (result > 0) {
             return BaseResult.success("删除成功");
