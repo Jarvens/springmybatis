@@ -8,7 +8,6 @@ import com.kunlun.api.common.utils.PBKUtils;
 import com.kunlun.api.dao.sysuser.SystemUserDao;
 import com.kunlun.api.domain.SysUser;
 import com.mysql.jdbc.StringUtils;
-import com.sun.xml.internal.rngom.parse.host.Base;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,7 +86,8 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
         if (count <= 0) {
             return BaseResult.error("login_fail", "账号或密码不正确");
         }
-        return null;
+        //TODO  生成Token 并且返回
+        return BaseResult.success("登录成功");
     }
 
     /**
@@ -118,13 +118,34 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
     }
 
     /**
-     * 删除用户信息
+     * 删除用户信息  逻辑删除
      *
      * @param account
      * @return
      */
     @Override
     public BaseResult deleteUser(String account) {
-        return null;
+
+        Integer result = systemUserDao.delete(account);
+        if (result > 0) {
+            return BaseResult.success("删除成功");
+        }
+        return BaseResult.error("delete_fail", "删除失败");
+    }
+
+    /**
+     * 更新用户信息
+     *
+     * @param sysUser
+     * @return
+     */
+    @Override
+    public BaseResult updateUserInfo(SysUser sysUser) {
+        Integer validName = systemUserDao.validName(sysUser.getName());
+        if (validName > 0) {
+            return BaseResult.error("name_exist", "名称已存在");
+        }
+        systemUserDao.updateSysUserInfo(sysUser);
+        return BaseResult.success("用户信息更新成功");
     }
 }

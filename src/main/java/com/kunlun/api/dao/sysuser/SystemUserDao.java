@@ -20,12 +20,16 @@ public interface SystemUserDao {
 
     void add(SysUser sysUser);
 
-    Integer validUser(String account,String password);
+    Integer validUser(String account, String password);
 
-    Integer updatePassword(String account,String newPassword);
+    Integer updatePassword(String account, String newPassword);
 
     Integer validAccount(String account);
 
     Integer validName(String name);
+
+    Integer delete(String account);
+
+    void updateSysUserInfo(SysUser sysUser);
 
 }

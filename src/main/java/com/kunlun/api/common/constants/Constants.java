@@ -32,6 +32,9 @@ public class Constants {
      */
     public static final int PBKDF2_ITERATORS = 2000;
 
+    /**
+     * 固定盐
+     */
     public static final String ENCRYPT_SALT = "ed1936ff13f5c5776dc39a2503044af99b02b369";
 
 }

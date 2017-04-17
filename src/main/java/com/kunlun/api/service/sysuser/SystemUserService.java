@@ -25,4 +25,6 @@ public interface SystemUserService {
 
     BaseResult deleteUser(String account);
 
+    BaseResult updateUserInfo(SysUser sysUser);
+
 }

@@ -67,18 +67,18 @@ public class SystemUserController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public BaseResult update(SysUser sysUser) {
-        return null;
+        return systemUserService.updateUserInfo(sysUser);
     }
 
     /**
      * 删除用户信息
      *
-     * @param sysUser
+     * @param account
      * @return
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public BaseResult delete(String account) {
-        return null;
+        return systemUserService.deleteUser(account);
     }
 
 
@@ -94,10 +94,7 @@ public class SystemUserController {
         if (StringUtils.isNullOrEmpty(account) || StringUtils.isNullOrEmpty(password)) {
             return BaseResult.error("param_error", "请输入用户名或者密码");
         }
-        systemUserService.login(account,password);
-
-        //TODO   生成Token
-        return null;
+        return systemUserService.login(account, password);
     }
 
     /**
@@ -116,7 +113,7 @@ public class SystemUserController {
         if (StringUtils.isNullOrEmpty(confirmPassword)) {
             return BaseResult.error("param_error", "请输入确认密码");
         }
-        return systemUserService.updatePassword(account,oldPassword,newPassword,confirmPassword);
+        return systemUserService.updatePassword(account, oldPassword, newPassword, confirmPassword);
     }
 
 
