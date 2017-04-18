@@ -4,6 +4,7 @@ import com.kunlun.api.common.constants.Constants;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
@@ -56,6 +57,19 @@ public class SysUser implements Serializable {
 
     //更新时间
     private Date updateTime;
+
+    //行政区划名称
+    @Transient
+    private String cityName;
+
+    //行政区划编码
+    private String cityCode;
+
+    //家庭住址
+    private String address;
+
+    //详细介绍
+    private String description;
 
     public Long getId() {
         return id;
@@ -161,6 +175,38 @@ public class SysUser implements Serializable {
         this.updateTime = updateTime;
     }
 
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "SysUser{" +
@@ -177,6 +223,10 @@ public class SysUser implements Serializable {
                 ", operator='" + operator + '\'' +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
+                ", cityName='" + cityName + '\'' +
+                ", cityCode='" + cityCode + '\'' +
+                ", address='" + address + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

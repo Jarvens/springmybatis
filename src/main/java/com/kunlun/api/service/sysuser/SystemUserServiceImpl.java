@@ -65,9 +65,15 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
         return systemUserDao.count(key);
     }
 
+    /**
+     * 添加用户
+     *
+     * @param sysUser
+     * @return
+     */
     @Override
     public BaseResult add(SysUser sysUser) {
-        SysUser validAccount = null;
+        SysUser validAccount = systemUserDao.validAccount(sysUser.getAccount());
         if (null != validAccount) {
             return BaseResult.error("account_exist", "账号已存在");
         }
@@ -76,7 +82,7 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
             return BaseResult.error("name_exist", "名称已存在");
         }
         systemUserDao.add(sysUser);
-        return BaseResult.success("新增成功");
+        return BaseResult.success("register_success");
     }
 
     /**
@@ -132,7 +138,7 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
     public BaseResult deleteUser(String account) {
         Integer result = systemUserDao.deleteUser(account);
         if (result > 0) {
-            return BaseResult.success("删除成功");
+            return BaseResult.success("delete_success");
         }
         return BaseResult.error("delete_fail", "删除失败");
     }
@@ -150,7 +156,7 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
             return BaseResult.error("name_exist", "名称已存在");
         }
         systemUserDao.updateSysUserInfo(sysUser);
-        return BaseResult.success("用户信息更新成功");
+        return BaseResult.success("update_success");
     }
 
     /**
@@ -165,9 +171,12 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
         if (null == sysUser) {
             return BaseResult.error("account_not_exist", "账户不存在");
         }
+        //查询redis删除相对应的存储  以免修改密码过后该人员还可以继续操作
+        redisTemplate.opsForList().remove(Constants.ON_LINE + sysUser.getAccount(), -1, null);
+        //PBK加密算法
         String encryptPassword = PBKUtils.getEncryptedPassword(Constants.DEFAULT_PASSWORD, Constants.ENCRYPT_SALT);
         sysUser.setPassword(encryptPassword);
         systemUserDao.updateSysUserInfo(sysUser);
-        return BaseResult.success("密码重置成功");
+        return BaseResult.success("reset_success");
     }
 }

@@ -12,7 +12,6 @@ import com.kunlun.api.service.sysuser.SystemUserService;
 import com.mysql.jdbc.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -46,20 +45,21 @@ public class SystemUserController {
      * @param key
      * @return
      */
+    @AccessAnnotation
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public BaseResult list(Integer pageNo, Integer pageSize, String key) {
         return systemUserService.list(pageNo, pageSize, key);
     }
 
     /**
-     * 新增用户
+     * 注册信息
      *
      * @param sysUser
      * @return
      */
     @UserTypeAnnotation
     @AccessAnnotation
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     public BaseResult add(@Validated SysUser sysUser, BindingResult validResult, boolean defaultPass) throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (validResult.hasErrors()) {
             String errors = validResult.getAllErrors().get(0).getDefaultMessage();
@@ -157,7 +157,11 @@ public class SystemUserController {
     public BaseResult logout(@RequestHeader String token) throws Exception {
         //解析Token
         SysUser sysUser = JSON.parseObject(TokenUtils.aesDecrypt(token, Constants.TOKEN_KEY), SysUser.class);
-        redisTemplate.opsForList().remove(Constants.ON_LINE + sysUser.getAccount(), -1, null);
-        return BaseResult.success("logout_success");
+        long res = redisTemplate.opsForList().remove(Constants.ON_LINE + sysUser.getAccount(), -1, null);
+        if (res > 0) {
+            return BaseResult.success("logout_success");
+        }
+        return BaseResult.error("logout_fail", "退出失败,请联系管理员");
+
     }
 }

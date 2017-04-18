@@ -17,6 +17,9 @@
         <result column="operator" property="operator" jdbcType="VARCHAR"/>
         <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="cityCode" property="cityCode" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
     </resultMap>
 
     <select id="list" resultMap="BaseResultMap" parameterType="java.lang.String">
