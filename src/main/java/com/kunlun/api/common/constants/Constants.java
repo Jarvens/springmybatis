@@ -52,4 +52,9 @@ public class Constants {
      */
     public static final String DEFAULT_PASSWORD = "888888";
 
+    /**
+     * redis记录在线用户使用key
+     */
+    public static final String ON_LINE="on_line:";
+
 }

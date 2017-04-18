@@ -1,17 +1,21 @@
 package com.kunlun.api.web.sysuser;
 
+import com.alibaba.fastjson.JSON;
 import com.kunlun.api.common.annotations.AccessAnnotation;
 import com.kunlun.api.common.annotations.UserTypeAnnotation;
 import com.kunlun.api.common.constants.Constants;
 import com.kunlun.api.common.result.BaseResult;
 import com.kunlun.api.common.utils.PBKUtils;
+import com.kunlun.api.common.utils.TokenUtils;
 import com.kunlun.api.domain.SysUser;
 import com.kunlun.api.service.sysuser.SystemUserService;
 import com.mysql.jdbc.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +35,7 @@ public class SystemUserController {
     private SystemUserService systemUserService;
 
     @Autowired
-    private RedisTemplate<? extends Object, ? extends Object> redisTemplate;
+    private RedisTemplate redisTemplate;
 
     /**
      * 查询 云平台系统用户列表
@@ -88,6 +92,7 @@ public class SystemUserController {
      * @param account
      * @return
      */
+    @UserTypeAnnotation
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public BaseResult delete(String account) {
         return systemUserService.deleteUser(account.trim());
@@ -102,7 +107,7 @@ public class SystemUserController {
      * @return
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public BaseResult login(String account, String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public BaseResult login(String account, String password) throws Exception {
         if (StringUtils.isNullOrEmpty(account) || StringUtils.isNullOrEmpty(password)) {
             return BaseResult.error("param_error", "请输入用户名或者密码");
         }
@@ -117,6 +122,7 @@ public class SystemUserController {
      * @param newPassword
      * @return
      */
+    @AccessAnnotation
     @RequestMapping(value = "/update-password", method = RequestMethod.POST)
     public BaseResult updatePassword(String account, String oldPassword, String newPassword, String confirmPassword) throws Exception {
         if (StringUtils.isNullOrEmpty(newPassword)) {
@@ -135,10 +141,23 @@ public class SystemUserController {
      * @param account
      * @return
      */
+    @UserTypeAnnotation
+    @AccessAnnotation
     @RequestMapping(value = "/reset-password", method = RequestMethod.POST)
     public BaseResult resetPassword(String account) throws InvalidKeySpecException, NoSuchAlgorithmException {
         return systemUserService.resetPassword(account.trim());
     }
 
-
+    /**
+     * 退出登录
+     *
+     * @return
+     */
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    public BaseResult logout(@RequestHeader String token) throws Exception {
+        //解析Token
+        SysUser sysUser = JSON.parseObject(TokenUtils.aesDecrypt(token, Constants.TOKEN_KEY), SysUser.class);
+        redisTemplate.opsForList().remove(Constants.ON_LINE + sysUser.getAccount(), -1, null);
+        return BaseResult.success("logout_success");
+    }
 }

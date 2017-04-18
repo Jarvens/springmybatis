@@ -10,12 +10,15 @@ import com.kunlun.api.dao.sysuser.SystemUserDao;
 import com.kunlun.api.domain.SysUser;
 import com.mysql.jdbc.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by kunlun on 2017/4/17.
@@ -26,6 +29,9 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
 
     @Autowired
     private SystemUserDao systemUserDao;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 关键字搜索   列表查询    分页
@@ -81,14 +87,16 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
      * @return
      */
     @Override
-    public BaseResult login(String account, String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public BaseResult login(String account, String password) throws Exception {
         String encryptPassword = PBKUtils.getEncryptedPassword(password, Constants.ENCRYPT_SALT);
         SysUser sysUser = systemUserDao.validUser(account, encryptPassword);
         if (null == sysUser) {
             return BaseResult.error("login_fail", "账号或密码不正确");
         }
-        //TODO  生成Token 并且返回
-        return BaseResult.success("登录成功");
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        valueOperations.set(Constants.ON_LINE + account, sysUser.toString(), 300, TimeUnit.SECONDS);
+        String token = TokenUtils.aesEncrypt(account + sysUser.getName(), Constants.TOKEN_KEY);
+        return BaseResult.success(token);
     }
 
     /**

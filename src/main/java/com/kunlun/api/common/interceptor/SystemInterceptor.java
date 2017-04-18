@@ -7,6 +7,10 @@ import com.kunlun.api.common.constants.Constants;
 import com.kunlun.api.common.result.BaseResult;
 import com.kunlun.api.common.utils.TokenUtils;
 import com.kunlun.api.domain.SysUser;
+import com.mysql.jdbc.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -17,6 +21,9 @@ import javax.servlet.http.HttpServletResponse;
  * Created by kunlun on 2017/4/17.
  */
 public class SystemInterceptor extends HandlerInterceptorAdapter {
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -37,6 +44,12 @@ public class SystemInterceptor extends HandlerInterceptorAdapter {
                 response.getWriter().write(JSON.toJSONString(BaseResult.error("token_error", "Token信息非法")));
                 return false;
             } else {
+                ValueOperations valueOperations = redisTemplate.opsForValue();
+                String val = (String) valueOperations.get(Constants.ON_LINE + sysUser.getAccount());
+                if (StringUtils.isNullOrEmpty(val)) {
+                    response.getWriter().write(JSON.toJSONString(BaseResult.error("login_timeout", "登录超时")));
+                    return false;
+                }
                 if (userTypeAnnotation == null) {
                     return true;
                 }

@@ -19,7 +19,7 @@ public interface SystemUserService {
 
     BaseResult add(SysUser sysUser) throws InvalidKeySpecException, NoSuchAlgorithmException;
 
-    BaseResult login(String account,String password) throws InvalidKeySpecException, NoSuchAlgorithmException;
+    BaseResult login(String account,String password) throws Exception;
 
     BaseResult updatePassword(String account,String oldPassword,String newPassword,String confirmPassword) throws Exception;
 

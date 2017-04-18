@@ -5,13 +5,14 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 云平台  -  系统用户
  * Created by kunlun on 2017/4/12.
  */
-public class SysUser {
+public class SysUser implements Serializable {
 
     //主键
     private Long id;
