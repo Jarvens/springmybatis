@@ -9,6 +9,7 @@ import com.kunlun.api.domain.SysUser;
 import com.kunlun.api.service.sysuser.SystemUserService;
 import com.mysql.jdbc.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,9 @@ public class SystemUserController {
     @Autowired
     private SystemUserService systemUserService;
 
+    @Autowired
+    private RedisTemplate<? extends Object, ? extends Object> redisTemplate;
+
     /**
      * 查询 云平台系统用户列表
      * 分页  条件查询
@@ -40,7 +44,6 @@ public class SystemUserController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public BaseResult list(Integer pageNo, Integer pageSize, String key) {
-
         return systemUserService.list(pageNo, pageSize, key);
     }
 

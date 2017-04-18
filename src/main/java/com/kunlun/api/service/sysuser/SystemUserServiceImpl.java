@@ -61,7 +61,7 @@ public class SystemUserServiceImpl implements SystemUserService, PageCommon {
 
     @Override
     public BaseResult add(SysUser sysUser) {
-        SysUser validAccount = systemUserDao.validAccount(sysUser.getAccount());
+        SysUser validAccount = null;
         if (null != validAccount) {
             return BaseResult.error("account_exist", "账号已存在");
         }

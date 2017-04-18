@@ -28,6 +28,7 @@ public class SysUser {
     private String mobilePhone;
 
     //密码
+    @NotBlank(message = "请输入密码信息")
     @Length(min = 6, max = 10, message = "密码长度在6~10位之间")
     private String password;
 

@@ -37,7 +37,7 @@
         <if test="key!=null">and concat_ws(account,name,card_no) like #{key}</if>
     </select>
 
-    <select id="count" resultMap="java.lang.Integer" parameterType="java.lang.String">
+    <select id="count" resultType="java.lang.Integer" parameterType="java.lang.String">
         select count (1) from t_sys_user where 1=1
         <if test="key!=null">and concat_ws(account,name,card_no) like #{key}</if>
     </select>
