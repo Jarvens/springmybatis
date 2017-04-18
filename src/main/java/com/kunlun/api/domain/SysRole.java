@@ -1,5 +1,7 @@
 package com.kunlun.api.domain;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import java.util.Date;
 
 /**
@@ -13,6 +15,7 @@ public class SysRole {
     private Long id;
 
     //角色名称
+    @NotBlank(message = "请输入角色名称")
     private String name;
 
     //角色备注

@@ -43,18 +43,50 @@ public class SysRoleServiceImpl implements SysRoleService, PageCommon {
         return new PageResult(list, pageNo, pageSize, count);
     }
 
+    /**
+     * 新增角色
+     *
+     * @param sysRole
+     * @return
+     */
     @Override
-    public BaseResult add() {
-        return null;
+    public BaseResult add(SysRole sysRole) {
+        SysRole validRole = sysRoleDao.queryRoleByName(sysRole.getName());
+        if (null != validRole) {
+            return BaseResult.error("name_exist_exist", "角色名称已存在");
+        }
+        return sysRoleDao.add(sysRole);
     }
 
+    /**
+     * 更新角色信息
+     *
+     * @param sysRole
+     * @return
+     */
     @Override
-    public BaseResult update() {
-        return null;
+    public BaseResult update(SysRole sysRole) {
+        SysRole validRole = sysRoleDao.queryRoleByName(sysRole.getName());
+        if (null != validRole) {
+            return BaseResult.error("name_exist", "角色名称已存在");
+        }
+        sysRoleDao.update(sysRole);
+        return BaseResult.success("update_success");
     }
 
+    /**
+     * 删除角色
+     *
+     * @param roleId
+     * @return
+     */
     @Override
-    public BaseResult delete() {
-        return null;
+    public BaseResult delete(String roleId) {
+        SysRole sysRole = sysRoleDao.queryRoleById(roleId);
+        if (null != sysRole) {
+            return BaseResult.error("role_used", "启用状态下不可删除");
+        }
+        sysRoleDao.deleteRoleById(roleId);
+        return BaseResult.success("delete_success");
     }
 }
