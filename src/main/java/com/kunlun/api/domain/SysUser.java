@@ -26,7 +26,7 @@ public class SysUser implements Serializable {
     private String name;
 
     //手机号
-    @Pattern(regexp = Constants.MOBILE_REGEXP, message = "手机格式错误")
+//    @Pattern(regexp = Constants.MOBILE_REGEXP, message = "手机格式错误")
     private String mobilePhone;
 
     //密码

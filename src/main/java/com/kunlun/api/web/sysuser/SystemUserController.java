@@ -57,13 +57,17 @@ public class SystemUserController {
      * @param sysUser
      * @return
      */
-    @UserTypeAnnotation
-    @AccessAnnotation
+//    @UserTypeAnnotation
+//    @AccessAnnotation
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public BaseResult add(@Validated SysUser sysUser, BindingResult validResult, boolean defaultPass) throws InvalidKeySpecException, NoSuchAlgorithmException {
+
         if (validResult.hasErrors()) {
             String errors = validResult.getAllErrors().get(0).getDefaultMessage();
-            return BaseResult.error("param_error", errors);
+            System.out.println(validResult.getFieldError().getField());
+            if (!validResult.getFieldError().getField().equals("password") && defaultPass) {
+                return BaseResult.error("param_error", errors);
+            }
         }
         String encryptPassword = "";
         if (defaultPass) {

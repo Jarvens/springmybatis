@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 系统拦截器
  * Created by kunlun on 2017/4/17.
  */
 public class SystemInterceptor extends HandlerInterceptorAdapter {
@@ -53,7 +54,7 @@ public class SystemInterceptor extends HandlerInterceptorAdapter {
                 if (userTypeAnnotation == null) {
                     return true;
                 }
-                if (!sysUser.getAccount().equals("admin")) {
+                if (!sysUser.getType().equals("admin")) {
                     response.getWriter().write(JSON.toJSONString(BaseResult.error("permission_denied", "此操作需要管理员权限")));
                     return false;
                 }

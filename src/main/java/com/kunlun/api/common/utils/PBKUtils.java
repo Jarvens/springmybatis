@@ -69,7 +69,7 @@ public class PBKUtils {
         String salt = PBKUtils.generateSalt();
         String password = "123456789";
         String encryptPassword = PBKUtils.getEncryptedPassword(password,Constants.ENCRYPT_SALT);
-        System.out.println("盐："+salt);
+        System.out.println("随机盐："+salt);
         System.out.println("密文："+encryptPassword);
     }
 
