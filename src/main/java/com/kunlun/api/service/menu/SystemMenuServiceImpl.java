@@ -70,4 +70,21 @@ public class SystemMenuServiceImpl implements SystemMenuService, PageCommon {
         systemMenuDao.add(sysMenu);
         return BaseResult.success("add_success");
     }
+
+    /**
+     * 删除菜单
+     *
+     * @param menuId
+     * @return
+     */
+    @Override
+    public BaseResult delete(Long menuId) {
+        //TODO 校验菜单是否有角色正在使用
+        Integer valid = systemMenuDao.validUse(menuId);
+        if (valid > 0) {
+            return BaseResult.error("in_use","正在使用中,不可删除");
+        }
+        systemMenuDao.deleteByMenuId(menuId);
+        return null;
+    }
 }

@@ -23,4 +23,8 @@ public interface SystemMenuDao {
     SysMenu queryByNameAndUrl(@Param(value = "name") String name, @Param(value = "url") String url);
 
     void add(SysMenu sysMenu);
+
+    Integer validUse(Long menuId);
+
+    void deleteByMenuId(Long menuId);
 }

@@ -55,4 +55,16 @@
         values(#{name},#{pid},#{description},#{url},#{type},#{status},now(),now(),#{operator})
     </insert>
 
+    <select id="validUse" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        select coutn(1) from t_sys_role tsr
+        left join t_sys_menu_role_relation tsrr on tsr.id=tsrr.role_id
+        left join t_sys_menu tsm on tsrr.menu_id=tsm.id
+        where tsr.status='0'
+        and tsm.id=#{menuId}
+    </select>
+
+    <update id="deleteByMenuId" parameterType="java.lang.Long">
+        update t_sys_menu set status='1' where id=#{menuId}
+    </update>
+
 </mapper>

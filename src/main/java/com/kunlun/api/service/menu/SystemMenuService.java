@@ -16,4 +16,6 @@ public interface SystemMenuService {
     List<SysMenu> list(String pid,String userId);
 
     BaseResult add(SysMenu sysMenu);
+
+    BaseResult delete(Long menuId);
 }

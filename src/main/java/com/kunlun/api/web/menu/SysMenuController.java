@@ -57,7 +57,7 @@ public class SysMenuController {
      * @return
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public BaseResult delete(String menuId) {
+    public BaseResult delete(Long menuId) {
         return null;
     }
 
