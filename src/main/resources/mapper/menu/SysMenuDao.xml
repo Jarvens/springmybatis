@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kunlun.api.dao.menu.SystemMenuDao">
+    <resultMap id="BaseResultMap" type="com.kunlun.api.domain.SysMenu">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="pid" property="pid" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="operator" property="operator" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="list" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select tsm.id as id,
+         tsm.name as name,
+         tsm.pid as pid,
+         tsm.description as description,
+         tsm.url as url,
+         tsm.type as type,
+         tsm.status as status,
+         tsm.create_time as createTime,
+         tsm.update_time as updateTime,
+         tsm.operator as operator
+        from t_sys_user_role tsur
+        left join t_sys_role tsr on tsur.role_id = tsr.id
+        left join t_sys_menu_role_relation tsmrrt on tsr.id=tsmrrt.role_id
+        left join t_sys_menu tsm on tsmrrt.menu_id = tsm.id
+        where tsm.status='0'
+        and tsur.user_id=#{userId}
+        and tsm.pid=#{pid}
+    </select>
+
+    <select id="queryByNameAndUrl" resultMap="BaseResultMap" parameterType="java.lang.String">
+      select id,
+      name,
+      pid,
+      description,
+      url,
+      type,
+      status,
+      create_time as createtime,
+      update_time as updateTime,
+      operator
+      from t_sys_menu where name=#{name} or url=#{url}
+    </select>
+
+    <insert id="add" parameterType="com.kunlun.api.domain.SysMenu">
+        insert into t_sys_menu (name,pid,description,url,type,status,create_time,update_time,operator)
+        values(#{name},#{pid},#{description},#{url},#{type},#{status},now(),now(),#{operator})
+    </insert>
+
+</mapper>

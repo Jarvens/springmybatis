@@ -9,6 +9,7 @@ import com.kunlun.api.common.utils.TokenUtils;
 import com.kunlun.api.domain.SysUser;
 import com.mysql.jdbc.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.NamedThreadLocal;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.method.HandlerMethod;
@@ -23,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SystemInterceptor extends HandlerInterceptorAdapter {
 
+    private static final ThreadLocal<Long> startTimeThreadLocal = new NamedThreadLocal<>("ThreadLocal startTime");
+
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -36,26 +39,30 @@ public class SystemInterceptor extends HandlerInterceptorAdapter {
         } else {
             String token = request.getHeader("hcon_token");
             if (null == token) {
-                response.getWriter().write(JSON.toJSONString(BaseResult.error("need_token", "需要Token")));
+                response.getWriter()
+                        .write(JSON.toJSONString(BaseResult.error("need_token", "需要Token")));
                 return false;
             }
             String decryptContent = TokenUtils.aesDecrypt(token, Constants.TOKEN_KEY);
             SysUser sysUser = JSON.parseObject(decryptContent, SysUser.class);
             if (null == sysUser) {
-                response.getWriter().write(JSON.toJSONString(BaseResult.error("token_error", "Token信息非法")));
+                response.getWriter()
+                        .write(JSON.toJSONString(BaseResult.error("token_error", "Token信息非法")));
                 return false;
             } else {
                 ValueOperations valueOperations = redisTemplate.opsForValue();
                 String val = (String) valueOperations.get(Constants.ON_LINE + sysUser.getAccount());
                 if (StringUtils.isNullOrEmpty(val)) {
-                    response.getWriter().write(JSON.toJSONString(BaseResult.error("login_timeout", "登录超时")));
+                    response.getWriter()
+                            .write(JSON.toJSONString(BaseResult.error("login_timeout", "登录超时")));
                     return false;
                 }
                 if (userTypeAnnotation == null) {
                     return true;
                 }
                 if (!sysUser.getType().equals("admin")) {
-                    response.getWriter().write(JSON.toJSONString(BaseResult.error("permission_denied", "此操作需要管理员权限")));
+                    response.getWriter()
+                            .write(JSON.toJSONString(BaseResult.error("permission_denied", "此操作需要管理员权限")));
                     return false;
                 }
             }

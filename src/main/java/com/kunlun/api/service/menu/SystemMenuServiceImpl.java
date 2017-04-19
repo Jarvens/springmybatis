@@ -1,5 +1,6 @@
 package com.kunlun.api.service.menu;
 
+import com.kunlun.api.common.result.BaseResult;
 import com.kunlun.api.common.result.PageCommon;
 import com.kunlun.api.common.result.PageResult;
 import com.kunlun.api.dao.menu.SystemMenuDao;
@@ -38,8 +39,35 @@ public class SystemMenuServiceImpl implements SystemMenuService, PageCommon {
         return new PageResult(list, count, pageNo, pageSize);
     }
 
+    /**
+     * 递归查询  根据pid查询
+     *
+     * @return
+     */
     @Override
-    public List<SysMenu> list() {
-        return null;
+    public List<SysMenu> list(String pid, String userId) {
+        List<SysMenu> list = systemMenuDao.list(pid, userId);
+        if (null != list && list.size() > 0) {
+            list.forEach(item -> {
+                item.setLeaf(list(String.valueOf(item.getId()), userId));
+            });
+        }
+        return list;
+    }
+
+    /**
+     * 新增菜单
+     *
+     * @param sysMenu
+     * @return
+     */
+    @Override
+    public BaseResult add(SysMenu sysMenu) {
+        SysMenu valid = systemMenuDao.queryByNameAndUrl(sysMenu.getName(), sysMenu.getUrl());
+        if (null != valid) {
+            return BaseResult.error("exist", "菜单名称或地址已存在");
+        }
+        systemMenuDao.add(sysMenu);
+        return BaseResult.success("add_success");
     }
 }

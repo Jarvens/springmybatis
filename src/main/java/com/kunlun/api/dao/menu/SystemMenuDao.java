@@ -14,9 +14,13 @@ import java.util.List;
 @Repository
 public interface SystemMenuDao {
 
-    List<SysMenu> pageList(RowBounds rowBounds,@Param(value = "key") String key);
+    List<SysMenu> pageList(RowBounds rowBounds, @Param(value = "key") String key);
 
-    List<SysMenu> list();
+    List<SysMenu> list(@Param(value = "pid") String pid, @Param(value = "userId") String userId);
 
-    Integer count (String key);
+    Integer count(@Param(value = "key") String key);
+
+    SysMenu queryByNameAndUrl(@Param(value = "name") String name, @Param(value = "url") String url);
+
+    void add(SysMenu sysMenu);
 }

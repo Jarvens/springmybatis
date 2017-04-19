@@ -1,5 +1,6 @@
 package com.kunlun.api.service.menu;
 
+import com.kunlun.api.common.result.BaseResult;
 import com.kunlun.api.common.result.PageResult;
 import com.kunlun.api.domain.SysMenu;
 
@@ -12,5 +13,7 @@ public interface SystemMenuService {
 
     PageResult pageList(Integer pageNo, Integer pageSize, String key);
 
-    List<SysMenu> list();
+    List<SysMenu> list(String pid,String userId);
+
+    BaseResult add(SysMenu sysMenu);
 }
