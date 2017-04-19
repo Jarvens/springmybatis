@@ -79,7 +79,7 @@ public class SystemMenuServiceImpl implements SystemMenuService, PageCommon {
      */
     @Override
     public BaseResult delete(Long menuId) {
-        //TODO 校验菜单是否有角色正在使用
+        //如果有角色正在使用 则不可逻辑删除
         Integer valid = systemMenuDao.validUse(menuId);
         if (valid > 0) {
             return BaseResult.error("in_use","正在使用中,不可删除");
