@@ -55,6 +55,16 @@ public class Constants {
     /**
      * redis记录在线用户使用key
      */
-    public static final String ON_LINE="on_line:";
+    public static final String ON_LINE = "on_line:";
+
+    /**
+     * excel文件存储位置
+     */
+    public static final String EXCEL_PATH = "/Users/kunlun/Downloads/excelTemp";
+
+    /**
+     * 图片存储位置
+     */
+    public static final String IMG_PATH = "/Users/kunlun/Downloads/excelTemp/img/";
 
 }
